@@ -1,20 +1,14 @@
 plugins {
 	id 'java'
-	id 'org.springframework.boot' version '3.2.4'
+	id 'org.springframework.boot' version '3.2.2'
 	id 'io.spring.dependency-management' version '1.1.4'
 }
 
-group = 'com.example'
+group = 'org'
 version = '0.0.1-SNAPSHOT'
 
 java {
 	sourceCompatibility = '17'
-}
-
-configurations {
-	compileOnly {
-		extendsFrom annotationProcessor
-	}
 }
 
 repositories {
@@ -22,15 +16,44 @@ repositories {
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-	compileOnly 'org.projectlombok:lombok'
-	runtimeOnly 'com.microsoft.sqlserver:mssql-jdbc'
-	runtimeOnly 'com.mysql:mysql-connector-j'
-	annotationProcessor 'org.projectlombok:lombok'
+	implementation 'org.springframework.boot:spring-boot-starter'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	//lombok사용
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+	//Mapstruct
+	implementation 'org.mapstruct:mapstruct:1.5.5.Final'
+	annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final'
+	//Swagger
+	implementation 'io.springfox:springfox-swagger-ui:3.0.0'
+	implementation 'io.springfox:springfox-swagger2:3.0.0'
+	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'
+	//env-hide
+	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+	//mariadb
+	implementation 'org.mariadb.jdbc:mariadb-java-client:3.1.4'
+	//JPA
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	//jwt
+	implementation 'io.jsonwebtoken:jjwt:0.9.1'
+
+	implementation 'javax.xml.bind:jaxb-api:2.3.1'
+
+
+	runtimeOnly 'mysql:mysql-connector-java:8.0.26'
+
+	//mariaDB
+	runtimeOnly 'org.mariadb.jdbc:mariadb-java-client:2.7.2'
+
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+
 }
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+tasks.named('bootJar') {
+	mainClass= 'org.shoppingMall.BackendShoppingMallApplication'
 }
