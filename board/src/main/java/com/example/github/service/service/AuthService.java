@@ -1,5 +1,14 @@
 package com.example.github.service.service;
 
+import com.example.github.config.security.JwtTokenProvider;
+import com.example.github.repository.role.Role;
+import com.example.github.repository.role.RoleJpa;
+import com.example.github.repository.user.User;
+import com.example.github.repository.user.UserJpa;
+import com.example.github.repository.userRole.UserRole;
+import com.example.github.repository.userRole.UserRoleJpa;
+import com.example.github.web.DTO.auth.LoginRequest;
+import com.example.github.web.DTO.auth.SignUpRequest;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;

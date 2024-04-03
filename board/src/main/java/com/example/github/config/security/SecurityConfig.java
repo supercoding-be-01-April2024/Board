@@ -1,5 +1,8 @@
 package com.example.github.config.security;
 
+import com.example.github.service.exceptions.CustomAccessDeniedHandler;
+import com.example.github.service.exceptions.CustomAuthenticationEntryPoint;
+import com.example.github.web.filters.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -1,5 +1,10 @@
 package com.example.github.web.controller;
 
+import com.example.github.config.security.JwtTokenProvider;
+import com.example.github.service.service.AuthService;
+import com.example.github.web.DTO.ResponseDTO;
+import com.example.github.web.DTO.auth.LoginRequest;
+import com.example.github.web.DTO.auth.SignUpRequest;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
