@@ -37,6 +37,8 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
     private final JwtTokenProvider jwtTokenProvider;
 
+
+
     //    @Transactional(transactionManager = "tm")
     public boolean signUp(SignUpRequest signUpRequest) {
         if(userJpa.existsByEmail(signUpRequest.getEmail())){
