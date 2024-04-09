@@ -37,14 +37,13 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
     private final JwtTokenProvider jwtTokenProvider;
 
-
-
     //    @Transactional(transactionManager = "tm")
     public boolean signUp(SignUpRequest signUpRequest) {
         if(userJpa.existsByEmail(signUpRequest.getEmail())){
             return false;
         }
         Role role= roleJpa.findByName("ROLE_USER");
+
 
         User user= User.builder()
                 .email(signUpRequest.getEmail())
