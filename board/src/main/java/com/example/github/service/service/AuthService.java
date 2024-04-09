@@ -44,7 +44,6 @@ public class AuthService {
         }
         Role role= roleJpa.findByName("ROLE_USER");
 
-
         User user= User.builder()
                 .email(signUpRequest.getEmail())
                 .password(passwordEncoder.encode(signUpRequest.getPassword()))
