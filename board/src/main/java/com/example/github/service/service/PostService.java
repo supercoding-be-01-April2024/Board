@@ -1,7 +1,5 @@
 package com.example.github.service.service;
 
-import com.example.github.repository.likes.Likes;
-import com.example.github.repository.likes.LikesJpa;
 import com.example.github.repository.post.Post;
 import com.example.github.repository.post.PostJpa;
 import com.example.github.repository.user.User;
@@ -19,7 +17,6 @@ import java.util.Optional;
 public class PostService {
     private final PostJpa postJpa;
     private final UserJpa userJpa;
-    private final LikesJpa likesJpa;
 
     public boolean createPost(PostRequest postRequest, String email) {
         User user = userJpa.findByEmailFetchJoin(email)
@@ -89,11 +86,6 @@ public class PostService {
             post.setLikeCnt(post.getLikeCnt() + 1);
             postJpa.save(post);
 
-            Likes likes = Likes.builder()
-                    .userId(userId)
-                    .postId(postId)
-                    .build();
-            likesJpa.save(likes);
         } else {
             throw new NotFoundException("게시글 좋아요 실패");
         }
