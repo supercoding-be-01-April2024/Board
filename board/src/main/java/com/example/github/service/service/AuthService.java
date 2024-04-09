@@ -39,12 +39,12 @@ public class AuthService {
 
     //    @Transactional(transactionManager = "tm")
     public boolean signUp(SignUpRequest signUpRequest) {
-        if(userJpa.existsByEmail(signUpRequest.getEmail())){
+        if (userJpa.existsByEmail(signUpRequest.getEmail())) {
             return false;
         }
-        Role role= roleJpa.findByName("ROLE_USER");
+        Role role = roleJpa.findByName("ROLE_USER");
 
-        User user= User.builder()
+        User user = User.builder()
                 .email(signUpRequest.getEmail())
                 .password(passwordEncoder.encode(signUpRequest.getPassword()))
                 .name(signUpRequest.getName())
@@ -62,19 +62,19 @@ public class AuthService {
     }
 
     public String login(LoginRequest loginRequest) {
-        try{
+        try {
             Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(loginRequest.getEmail(),  loginRequest.getPassword())
+                    new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword())
             );
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
-            User user= userJpa.findByEmailFetchJoin(loginRequest.getEmail())
-                    .orElseThrow(()-> new NullPointerException("해당 이메일로 계정을 찾을 수 없습니다."));
+            User user = userJpa.findByEmailFetchJoin(loginRequest.getEmail())
+                    .orElseThrow(() -> new NullPointerException("해당 이메일로 계정을 찾을 수 없습니다."));
 
-            List<String> roles= user.getUserRole().stream().map(UserRole::getRole).map(Role::getName).collect(Collectors.toList());
+            List<String> roles = user.getUserRole().stream().map(UserRole::getRole).map(Role::getName).collect(Collectors.toList());
             return jwtTokenProvider.createToken(loginRequest.getEmail(), roles);
 
-        } catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             throw new NotAcceptableStatusException("login not possible");
         }
@@ -82,9 +82,9 @@ public class AuthService {
 
 
     public boolean logout(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
-        Authentication auth= SecurityContextHolder.getContext().getAuthentication(); //JwtAuthenticationFilter에서 setAuthentication했음
-        if(auth != null){
-            String currentToken= jwtTokenProvider.resolveToken(httpServletRequest);
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication(); //JwtAuthenticationFilter에서 setAuthentication했음
+        if (auth != null) {
+            String currentToken = jwtTokenProvider.resolveToken(httpServletRequest);
             jwtTokenProvider.addToBlackList(currentToken);
             new SecurityContextLogoutHandler().logout(httpServletRequest, httpServletResponse, auth);
         }
