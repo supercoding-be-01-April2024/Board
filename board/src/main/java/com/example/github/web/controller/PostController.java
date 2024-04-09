@@ -5,6 +5,8 @@ import com.example.github.repository.userDetails.CustomUserDetails;
 import com.example.github.service.service.PostService;
 import com.example.github.web.DTO.Post.PostRequest;
 import com.example.github.web.DTO.ResponseDTO;
+import com.example.github.web.DTO.post.PostsResponse;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -27,6 +29,7 @@ public class PostController {
     }
 
     //이메일로 게시글 조회
+    //💡 ResponseDTO data
     @GetMapping("/find/{email}")
     public ResponseDTO getPostByEmail(@PathVariable String email) {
         Integer isSuccess = postService.getPostByEmail(email);
@@ -36,6 +39,7 @@ public class PostController {
     }
 
     //게시글 전체 조회
+    //💡 ResponseDTO data
     @GetMapping("/findAll")
     public ResponseDTO getAllPosts() {
         Integer isSuccess = postService.getAllPosts();
@@ -45,17 +49,18 @@ public class PostController {
     }
 
     //게시글 수정
-    @PostMapping("/modify/{postId}")
+    @PutMapping("/modify/{postId}")
     public ResponseDTO modifyPost(@RequestBody PostRequest postRequest, @AuthenticationPrincipal CustomUserDetails customUserDetails, @PathVariable Integer postId) {
         try {
             postService.modifyPost(postRequest, customUserDetails.getUserId(), postId);
-            return new ResponseDTO(HttpStatus.OK.value(), String.valueOf("Post modification successful."));
+            return new ResponseDTO(HttpStatus.OK.value(), "Post modification successful.");
         } catch (NotFoundException e) {
-            return new ResponseDTO(400, String.valueOf("Failed to modify post."));
+            return new ResponseDTO(400, "Failed to modify post.");
         }
     }
 
     //게시글 삭제
+    //💡DeleteMapping으로 바꾸기
     @GetMapping("/delete")
     public ResponseDTO deletePost(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
         try {
@@ -66,14 +71,25 @@ public class PostController {
         }
     }
 
+
     //게시글 좋아요 누르기
     @GetMapping("/likes/{postId}")
-    public ResponseDTO likesPost(@AuthenticationPrincipal CustomUserDetails customUserDetails, @PathVariable Integer postId) {
+    public ResponseDTO likesPost(@AuthenticationPrincipal CustomUserDetails customUserDetails,
+                                 @PathVariable Integer postId) {
         try {
-            postService.likesPost(customUserDetails.getUserId(), postId);
-            return new ResponseDTO(HttpStatus.OK.value(), String.valueOf("게시글 좋아요 성공"));
+            return postService.likesPost(customUserDetails.getUserId(), postId);
         } catch (NotFoundException e) {
-            return new ResponseDTO(400, String.valueOf("게시글 좋아요 실패"));
+            return new ResponseDTO(400, "게시글 좋아요 추가 실패");
         }
     }
+
+    //게시글 상세 조회 (게시글 + 딸린 댓글까지 찾아오기)
+    @Operation(summary = "게시글 상세 조회")
+    @GetMapping("/find/id/{postId}")
+    public ResponseDTO findPostById(@PathVariable Integer postId){
+        return postService.findPostById(postId);
+    }
+
+
+
 }
