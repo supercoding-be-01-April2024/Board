@@ -1,22 +1,33 @@
 package com.example.github.service.service;
 
+import com.example.github.repository.comment.Comment;
+import com.example.github.repository.comment.CommentJpa;
 import com.example.github.repository.post.Post;
 import com.example.github.repository.post.PostJpa;
 import com.example.github.repository.user.User;
 import com.example.github.repository.user.UserJpa;
 import com.example.github.web.DTO.Post.PostRequest;
+import com.example.github.web.DTO.ResponseDTO;
+import com.example.github.web.DTO.comment.CommentDto;
+import com.example.github.web.DTO.comment.CommentResponseDto;
+import com.example.github.web.DTO.post.PostDetailResponse;
+import com.example.github.web.DTO.post.PostsResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.webjars.NotFoundException;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class PostService {
     private final PostJpa postJpa;
     private final UserJpa userJpa;
+    private final CommentJpa commentJpa;
 
     public boolean createPost(PostRequest postRequest, String email) {
         User user = userJpa.findByEmailFetchJoin(email)
@@ -76,19 +87,48 @@ public class PostService {
 //        }
     }
 
-    public void likesPost(Integer userId, Integer postId) {
-        Integer postCnt = Long.valueOf(postJpa.findByUserId(userId).stream().count()).intValue();
+    public ResponseDTO likesPost(Integer userId, Integer postId) {
+        Post post= postJpa.findById(postId)
+                .orElseThrow(()-> new NotFoundException("아이디 "+ postId +"에 해당하는 게시글이 없습니다."));
 
-        Optional<Post> existingPost = postJpa.findById(postId);
+        post.setLikeCnt(post.getLikeCnt() + 1);
+        Post updatePost= postJpa.save(post);
 
-        if (postCnt > 0 && existingPost.isPresent()) {
-            Post post = existingPost.get();
-            post.setLikeCnt(post.getLikeCnt() + 1);
-            postJpa.save(post);
+        PostsResponse postsResponse = new PostsResponse(
+                updatePost.getPostId(),
+                updatePost.getTitle(),
+                updatePost.getName(),
+                updatePost.getLikeCnt(),
+                updatePost.getCreatedAt());
 
-        } else {
-            throw new NotFoundException("게시글 좋아요 실패");
-        }
 
+        return new ResponseDTO(HttpStatus.OK.value(),"Like successfully added. Post number "+ postId + " has " +post.getLikeCnt() + " likes", postsResponse);
+    }
+
+
+    public ResponseDTO findPostById(Integer postId) {
+        Post post= postJpa.findById(postId)
+                .orElseThrow(()-> new NotFoundException("아이디 "+ postId +"에 해당하는 게시글이 없습니다."));
+        List<Comment> comments= commentJpa.findAllByPost(post);
+        List<CommentResponseDto> commentResponseDtoList= comments
+                .stream()
+                .map(c-> new CommentResponseDto(
+                        c.getPost().getPostId(),
+                        c.getName(),
+                        c.getContent(),
+                        c.getCreateAt()))
+                .collect(Collectors.toList());
+
+        PostDetailResponse postDetailResponse= PostDetailResponse
+                .builder()
+                .postId(postId)
+                .title(post.getTitle())
+                .name(post.getName())
+                .content(post.getContent())
+                .createdAt(post.getCreatedAt())
+                .commentResponsDtoList(commentResponseDtoList)
+                .build();
+
+        return new ResponseDTO(HttpStatus.OK.value(), "게시글 상세 조회 성공", postDetailResponse);
     }
 }
