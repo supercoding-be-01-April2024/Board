@@ -42,6 +42,7 @@ public class CommentController {
     }
 
 
+    //💡날짜 형식 수정
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.OK)
     public ResponseDTO createComment(@RequestParam("post-id") Integer postId, @AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestBody CommentDto commentDto){

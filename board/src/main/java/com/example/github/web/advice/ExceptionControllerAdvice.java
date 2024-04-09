@@ -1,4 +1,4 @@
-package com.example.github.web.advcie;
+package com.example.github.web.advice;
 
 import com.example.github.service.exceptions.NotFoundException;
 import lombok.extern.slf4j.Slf4j;
