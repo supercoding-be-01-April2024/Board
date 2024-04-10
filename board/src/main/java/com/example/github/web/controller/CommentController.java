@@ -13,6 +13,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @RestController
@@ -46,12 +47,8 @@ public class CommentController {
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.OK)
     public ResponseDTO createComment(@RequestParam("post-id") Integer postId, @AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestBody CommentDto commentDto){
-        Boolean createResult =commentService.createResult(postId,customUserDetails,commentDto);
-        if (createResult==true){
-            return new ResponseDTO(HttpStatus.OK.value(),"Comment creation successful. " + LocalDateTime.now());
-        } else {
-            return new ResponseDTO(400,"Failed to create comment.");
-        }
+        ResponseDTO createResult =commentService.createResult(postId,customUserDetails,commentDto);
+        return createResult;
     }
 
 

@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
@@ -48,7 +49,7 @@ public class CommentService {
     //댓글 수정
     @CacheEvict(value = "comments",allEntries = true)
     @Transactional
-    public Boolean createResult(Integer postId,CustomUserDetails customUserDetails, CommentDto commentDto) {
+    public ResponseDTO createResult(Integer postId,CustomUserDetails customUserDetails, CommentDto commentDto) {
         Integer userId =customUserDetails.getUserId();
         //토큰에 있는 userId로 user 찾기
         User user = userJpa.findById(userId)
@@ -57,6 +58,8 @@ public class CommentService {
         Post post= postJpa.findById(postId)
                 .orElseThrow(()->new com.example.github.service.exceptions.NotFoundException("Post Id: "+postId+"에 해당하는 게시판이 존재하지 않습니다."));
         LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter dtf =DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH시 mm분");
+        String createAt =now.format(dtf);
         try {
             Comment comment = Comment.builder()
                     .post(post)
@@ -66,9 +69,9 @@ public class CommentService {
                     .createAt(now)
                     .build();
             commentJpa.save(comment);
-            return true;
+            return new ResponseDTO(HttpStatus.OK.value(), "Comment creation successful."+createAt);
         }catch (Exception e){
-            return false;
+            return new ResponseDTO(HttpStatus.BAD_REQUEST.value(),"Failed to create comment.");
         }
 
     }
