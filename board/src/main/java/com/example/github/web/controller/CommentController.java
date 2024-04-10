@@ -21,24 +21,24 @@ import java.util.List;
 @Slf4j
 public class CommentController {
     private final CommentService commentService;
-//    @GetMapping("/getComment")
-//    public
 
+    //post에 해당하는 댓글 조회
     @GetMapping("/get/{postId}")
     @ResponseStatus(HttpStatus.OK)
-    public List<CommentResponseDto> getComment(@PathVariable Integer postId){
-        return commentService.findAllComment(postId);
+    public ResponseDTO getComment(@PathVariable Integer postId){
+        return new ResponseDTO(HttpStatus.OK.value(),"Comment retrieval success",commentService.findAllComment(postId));
     }
+    //keyword에 해당하는 댓글 조회
     @GetMapping("/gets/{keyword}")
     @ResponseStatus(HttpStatus.OK)
-    public List<CommentResponseDto> getComment(@PathVariable String keyword){
-        return commentService.findAllCommentBykeyword(keyword);
+    public ResponseDTO getComment(@PathVariable String keyword){
+        return new ResponseDTO(HttpStatus.OK.value(),"Comment retrieval success",commentService.findAllCommentBykeyword(keyword));
     }
     //내가 쓴 댓글만 조회
     @GetMapping("/get/mycomment")
     @ResponseStatus(HttpStatus.OK)
-    public List<CommentResponseDto> getComment(@AuthenticationPrincipal CustomUserDetails customUserDetails){
-        return commentService.findAllCommentByuUserId(customUserDetails);
+    public ResponseDTO getComment(@AuthenticationPrincipal CustomUserDetails customUserDetails){
+        return new ResponseDTO(HttpStatus.OK.value(),"Comment retrieval success",commentService.findAllCommentByuUserId(customUserDetails));
     }
 
 

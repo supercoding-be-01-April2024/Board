@@ -33,7 +33,7 @@ public class CommentService {
     private final UserJpa userJpa;
     private final PostJpa postJpa;
 
-
+    //Post에 해당하는 모든 Comment 조회
     public List<CommentResponseDto> findAllComment(Integer postId) {
         Post post =postJpa.findById(postId)
                 .orElseThrow(()->new NotFoundException("Post Id: "+postId+"에 해당하는 게시판이 존재하지 않습니다."));
@@ -45,7 +45,7 @@ public class CommentService {
     return commentResponseDtos;
     }
 
-
+    //댓글 수정
     @CacheEvict(value = "comments",allEntries = true)
     @Transactional
     public Boolean createResult(Integer postId,CustomUserDetails customUserDetails, CommentDto commentDto) {
