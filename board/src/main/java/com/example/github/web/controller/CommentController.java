@@ -63,23 +63,16 @@ public class CommentController {
     @DeleteMapping("/delete")
     @ResponseStatus(HttpStatus.OK)
     public ResponseDTO deleteComment(@RequestParam("post-id") Integer postId,@RequestParam("comment-id") Integer commentId, @AuthenticationPrincipal CustomUserDetails customUserDetails){
-        Boolean deleteResult = commentService.deleteResult(postId,commentId,customUserDetails);
-        if (deleteResult==true){
-            return new ResponseDTO(HttpStatus.OK.value(),"Deletion of comment successful. "+ LocalDateTime.now());
-        }else{
-            return new ResponseDTO(HttpStatus.BAD_REQUEST.value(),"Failed to delete comment.");
-        }
+        ResponseDTO deleteResult = commentService.deleteResult(postId,commentId,customUserDetails);
+        return deleteResult;
 
     }
     @PutMapping("/update/{commentId}")
     @ResponseStatus(HttpStatus.OK)
     public ResponseDTO updateComment(@PathVariable Integer commentId, @AuthenticationPrincipal CustomUserDetails customUserDetails,@RequestBody CommentDto commentDto){
-        Boolean updateResult = commentService.updateResult(commentId,customUserDetails,commentDto);
-        if (updateResult==true){
-            return new ResponseDTO(HttpStatus.OK.value(),"Comment modification successful. "+ LocalDateTime.now());
-        }else{
-            return new ResponseDTO(HttpStatus.BAD_REQUEST.value(),"Failed to edit comment.");
-        }
+        ResponseDTO updateResult = commentService.updateResult(commentId,customUserDetails,commentDto);
+
+        return updateResult;
 
     }
 }

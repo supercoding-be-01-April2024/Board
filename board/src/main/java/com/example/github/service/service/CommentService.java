@@ -89,13 +89,16 @@ public class CommentService {
             throw new NotFoundException("해당 게시글에 댓글을 남기시지 않았습니다.");
         }
             List<Integer> postCommentId = commentsByPost.stream().map(Comment::getCommentId).toList();
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter dtf =DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH시 mm분");
+        String createAt =now.format(dtf);
             if (post.getUser().equals(user)){
                 commentIds.retainAll(postCommentId);
                 if (commentIds.isEmpty()){
                     throw new com.example.github.service.exceptions.NotFoundException("해당 게시판의 댓글이 아니거나 본인 댓글이 아니어서 삭제할 댓글이 없습니다.");
                 }
                 commentJpa.deleteAllById(commentIds);
-                    return new ResponseDTO(HttpStatus.OK.value(),"Comments ("+ commentIds+") have been deleted."+ LocalDateTime.now());
+                    return new ResponseDTO(HttpStatus.OK.value(),"Comments ("+ commentIds+") have been deleted."+ createAt);
 
             }else {
                 List<Comment> comments = commentJpa.findAllByUser(user);
@@ -106,12 +109,12 @@ public class CommentService {
                     throw new com.example.github.service.exceptions.NotFoundException("해당 게시판의 댓글이 아니거나 본인 댓글이 아니어서 삭제할 댓글이 없습니다.");
                 }
                 commentJpa.deleteAllById(commentIds);
-                return new ResponseDTO(HttpStatus.OK.value(),"Comments ("+ commentIds+") have been deleted."+ LocalDateTime.now());
+                return new ResponseDTO(HttpStatus.OK.value(),"Comments ("+ commentIds+") have been deleted. "+ createAt);
             }
 
 
     }
-    public Boolean deleteResult(Integer postId, Integer commentId, CustomUserDetails customUserDetails) {
+    public ResponseDTO deleteResult(Integer postId, Integer commentId, CustomUserDetails customUserDetails) {
         Integer userId =customUserDetails.getUserId();
         User user = userJpa.findById(userId)
                 .orElseThrow(()->new com.example.github.service.exceptions.NotFoundException("User Id : "+userId+"에 해당하는 user가 존재하지 않습니다."));
@@ -128,22 +131,25 @@ public class CommentService {
         if (!comments.contains(comment)){
             throw new NotFoundException("해당 게시판 : "+ postId +"에 댓글이 아닙니다.");
         }
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter dtf =DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH시 mm분");
+        String createAt =now.format(dtf);
         try {
             if (post.getUser().equals(user) && comments.contains(comment)) {
                 commentJpa.deleteById(commentId);
-                return true;
+                return new ResponseDTO(HttpStatus.OK.value(),"Deletion of comment successful. "+ createAt);
             } else if (commentsByUser.contains(comment) && comments.contains(comment)) {
                 commentJpa.deleteById(commentId);
-                return true;
-            } else return false;
+                return new ResponseDTO(HttpStatus.OK.value(),"Deletion of comment successful. "+ createAt);
+            } else return new ResponseDTO(HttpStatus.BAD_REQUEST.value(),"Failed to delete comment.");
         }catch (Exception e){
             e.printStackTrace();
-            return false;
+            return  new ResponseDTO(HttpStatus.BAD_REQUEST.value(),"Failed to delete comment.");
         }
     }
     @CacheEvict(value = "comments",allEntries = true)
     @Transactional
-    public Boolean updateResult(Integer commentId,CustomUserDetails customUserDetails, CommentDto commentDto) {
+    public ResponseDTO updateResult(Integer commentId,CustomUserDetails customUserDetails, CommentDto commentDto) {
         Integer userId =customUserDetails.getUserId();
 
         User user = userJpa.findById(userId)
@@ -152,7 +158,8 @@ public class CommentService {
                 .orElseThrow(()->new NotFoundException("Comment Id : "+commentId+"에 해당하는 comment가 존재하지 않습니다."));
         if (updateComment.getUser().equals(user)){
             updateComment.setContent(commentDto.getContent());
-            return true;
+            CommentDto crd = new CommentDto(updateComment.getContent());
+            return new ResponseDTO(HttpStatus.OK.value(),"Comment modification successful. ",crd);
         }else {
             throw new NotFoundException("해당  Comment Id : "+commentId+"은(는) User : "+user.getName()+"의 댓글이 아닙니다.");
         }
