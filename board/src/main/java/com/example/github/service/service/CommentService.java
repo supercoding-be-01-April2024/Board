@@ -59,6 +59,7 @@ public class CommentService {
                 .orElseThrow(()->new com.example.github.service.exceptions.NotFoundException("Post Id: "+postId+"에 해당하는 게시판이 존재하지 않습니다."));
         LocalDateTime now = LocalDateTime.now();
         DateTimeFormatter dtf =DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH시 mm분");
+
         String createAt =now.format(dtf);
         try {
             Comment comment = Comment.builder()

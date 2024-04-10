@@ -48,6 +48,7 @@ public class CommentController {
     @ResponseStatus(HttpStatus.OK)
     public ResponseDTO createComment(@RequestParam("post-id") Integer postId, @AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestBody CommentDto commentDto){
         ResponseDTO createResult =commentService.createResult(postId,customUserDetails,commentDto);
+
         return createResult;
     }
 
