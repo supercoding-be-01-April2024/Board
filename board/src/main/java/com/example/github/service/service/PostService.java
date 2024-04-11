@@ -2,13 +2,13 @@ package com.example.github.service.service;
 
 import com.example.github.repository.comment.Comment;
 import com.example.github.repository.comment.CommentJpa;
+//import com.example.github.repository.likes.LikesJpa;
 import com.example.github.repository.post.Post;
 import com.example.github.repository.post.PostJpa;
 import com.example.github.repository.user.User;
 import com.example.github.repository.user.UserJpa;
-import com.example.github.web.DTO.Post.PostRequest;
+import com.example.github.web.DTO.post.PostRequest;
 import com.example.github.web.DTO.ResponseDTO;
-import com.example.github.web.DTO.comment.CommentDto;
 import com.example.github.web.DTO.comment.CommentResponseDto;
 import com.example.github.web.DTO.post.PostDetailResponse;
 import com.example.github.web.DTO.post.PostsResponse;
@@ -28,6 +28,7 @@ public class PostService {
     private final PostJpa postJpa;
     private final UserJpa userJpa;
     private final CommentJpa commentJpa;
+    //private final LikesJpa likesJpa;
 
     public boolean createPost(PostRequest postRequest, String email) {
         User user = userJpa.findByEmailFetchJoin(email)
@@ -78,13 +79,8 @@ public class PostService {
             throw new NotFoundException("Failed to delete post.");
         }
 
-//        boolean userRole = authRole.contains("ROLE_USER");
-
-//        if(userRole == true) {
-//            postJpa.deleteAll();
-//        }else {
-            postJpa.deleteByUserId(userId);
-//        }
+        //likesJpa.deleteByUserId(userId);
+        postJpa.deleteByUserId(userId);
     }
 
     public ResponseDTO likesPost(Integer userId, Integer postId) {

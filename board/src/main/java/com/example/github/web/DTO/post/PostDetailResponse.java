@@ -1,7 +1,6 @@
 package com.example.github.web.DTO.post;
 
 
-import com.example.github.web.DTO.comment.CommentDto;
 import com.example.github.web.DTO.comment.CommentResponseDto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;

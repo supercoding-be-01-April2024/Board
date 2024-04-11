@@ -1,11 +1,9 @@
 package com.example.github.web.controller;
 
-import com.example.github.repository.post.Post;
 import com.example.github.repository.userDetails.CustomUserDetails;
 import com.example.github.service.service.PostService;
-import com.example.github.web.DTO.Post.PostRequest;
+import com.example.github.web.DTO.post.PostRequest;
 import com.example.github.web.DTO.ResponseDTO;
-import com.example.github.web.DTO.post.PostsResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -61,7 +59,7 @@ public class PostController {
 
     //게시글 삭제
     //💡DeleteMapping으로 바꾸기
-    @GetMapping("/delete")
+    @DeleteMapping("/delete")
     public ResponseDTO deletePost(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
         try {
             postService.deletePost(customUserDetails.getUserId());

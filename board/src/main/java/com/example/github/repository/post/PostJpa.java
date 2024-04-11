@@ -32,7 +32,5 @@ public interface PostJpa extends JpaRepository<Post, Integer> {
                     "FROM Post p " +
                     "WHERE p.user.userId = ?1 "
     )
-    default void deleteByUserId(Integer userId) {
-
-    }
+    void deleteByUserId(Integer userId);
 }

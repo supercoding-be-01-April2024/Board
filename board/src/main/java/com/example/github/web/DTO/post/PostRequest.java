@@ -1,4 +1,4 @@
-package com.example.github.web.DTO.Post;
+package com.example.github.web.DTO.post;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
