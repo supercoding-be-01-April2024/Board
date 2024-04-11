@@ -73,6 +73,114 @@ DB로는 MariaDB를 사용하였습니다. localDB에서 작동합니다.
 #### Logout
 <img width="553" alt="Screenshot 2024-04-05 at 17 39 23" src="https://github.com/soheeparklee/sc_project01_April2024_verSoh/assets/97790983/63b4d5f5-2327-4a6f-aea7-74aea0e9a6c6">
 
+## API 명세서
+
+#### Comment API
+
+#### Create Comment
+
+```http
+  POST /comment/create?post-id
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `comment`      | `String` | **Required**. comment |
+
+
+#### Get All Comment
+
+```http
+  GET /comment/get/{postId}
+
+```
+
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `postId` | `@PathVariable Integer` | **Required**. post-Id |
+
+#### Get Comment by keyword
+
+```http
+  GET /comment/get/{keyword}
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `keyword`      | `@PathVariable String` | **Required**. keyword |
+
+#### Get Comment by User
+
+```http
+  GET /comment/get/mycomment
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `CustomUserDetails`      | `@AuthenticationPrincipal` | **Required**. Token |
+
+
+#### Delete  Comments
+
+```http
+  DELETE /comment/deletes
+```
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `post-id`      | `@RequestParam Integer` | **Required**. post-id |
+| `comment-id`      | `@RequestParam List<Integer>` | **Required**. comment-ids |
+| `CustomUserDetails`      | `@AuthenticationPrincipal` | **Required**. Token |
+
+#### Delete  Comment
+
+```http
+  DELETE /comment/delete
+```
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `post-id`      | `@RequestParam Integer` | **Required**. post-id |
+| `comment-id`      | `@RequestParam Integer` | **Required**. comment-ids |
+| `CustomUserDetails`      | `@AuthenticationPrincipal` | **Required**. Token |
+
+#### Update  Comment
+
+```http
+  PUT /comment/update{commentId}
+```
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `comment-id`      | `@RequestParam Integer` | **Required**. comment-ids |
+| `CustomUserDetails`      | `@AuthenticationPrincipal` | **Required**. Token |
+
+## 실행결과 스크린샷
+
+### Comment API
+
+#### Create Comment
+![댓글 생성](https://github.com/supercoding-be-01-April2024/project_post-board_April2024/assets/156086602/69b6e9e4-1548-41bd-b0cd-4afceb0a770c)
+
+#### Get All Comment
+![post에 해당하는 댓글 조회](https://github.com/supercoding-be-01-April2024/project_post-board_April2024/assets/156086602/7f4195f0-cf4c-49f3-81c0-c213d50ba7b2)
+
+#### Get Comment by keyword
+![키워드로 댓글 조회](https://github.com/supercoding-be-01-April2024/project_post-board_April2024/assets/156086602/59933a0a-df5b-4649-aa92-6ad1c3f33d7e)
+
+#### Get Comment by User
+![내가 쓴 댓글만 조회](https://github.com/supercoding-be-01-April2024/project_post-board_April2024/assets/156086602/864de5fb-b90b-4f72-be1c-ddc2d3cf8dac)
+
+#### Delete  Comments
+![댓글 리스트로 삭제](https://github.com/supercoding-be-01-April2024/project_post-board_April2024/assets/156086602/238cbed9-6c19-4222-9a84-92912ed7e7e3)
+
+#### Delete  Comment
+![댓글 1개씩 삭제](https://github.com/supercoding-be-01-April2024/project_post-board_April2024/assets/156086602/7acac772-0a61-4cdf-a943-48fc3776462a)
+
+#### Update  Comment
+![댓글 수정](https://github.com/supercoding-be-01-April2024/project_post-board_April2024/assets/156086602/b3669a5e-b2d4-4924-a7d1-9b021be7f470)
+
+
+
+
+
 ## 코드 리뷰 및 피드백
 #### Post
 - post를 find, findAll 또는 modify했을 때 postResponseDto를 만들어 찾아진 post가 user에게 보여야 할 것 같습니다. 현재는 “게시글 찾기 성공”메세지만 보여집니다.
@@ -136,6 +244,157 @@ DB로는 MariaDB를 사용하였습니다. localDB에서 작동합니다.
         } else{
             throw new NotSameUserException("Post update fail. 작성자가 아닙니다.");
         }
+    }
+```
+
+####  🔴 게시판 주인일 때 해당 게시판의 Comment들이 아닌 자신의 다른 게시판 Comment까지 삭제 가능한 문제
+🟡 기존 코드
+```java
+public ResponseDTO deleteResult(Integer postId, Integer commentId, CustomUserDetails customUserDetails) {
+        Integer userId =customUserDetails.getUserId();
+        User user = userJpa.findById(userId)
+                .orElseThrow(()->new com.example.github.service.exceptions.NotFoundException("User Id : "+userId+"에 해당하는 user가 존재하지 않습니다."));
+        Post post =postJpa.findById(postId)
+                .orElseThrow(()->new com.example.github.service.exceptions.NotFoundException("Post Id : "+postId+"에 해당하는 게시판이 존재하지 않습니다."));
+        List<Comment> comments = commentJpa.findAllByPost(post);
+        if (comments.isEmpty()){
+            throw new NotFoundException("해당 게시판에 삭제할 댓글이 없습니다.");
+        }
+        List<Comment> commentsByUser = commentJpa.findAllByUser(user);
+        Comment comment = commentJpa.findById(commentId)
+                .orElseThrow(()->new NotFoundException("Comment Id : "+commentId+"에 해당하는 comment가 존재하지 않습니다."));
+
+        if (!comments.contains(comment)){
+            throw new NotFoundException("해당 게시판 : "+ postId +"에 댓글이 아닙니다.");
+        }
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter dtf =DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH시 mm분");
+        String createAt =now.format(dtf);
+        try {
+            if (post.getUser().equals(user)) {
+                commentJpa.deleteById(commentId);
+                return new ResponseDTO(HttpStatus.OK.value(),"Deletion of comment successful. "+ createAt);
+            } else if (commentsByUser.contains(comment) && comments.contains(comment)) {
+                commentJpa.deleteById(commentId);
+                return new ResponseDTO(HttpStatus.OK.value(),"Deletion of comment successful. "+ createAt);
+            } else return new ResponseDTO(HttpStatus.BAD_REQUEST.value(),"Failed to delete comment.");
+        }catch (Exception e){
+            e.printStackTrace();
+            return  new ResponseDTO(HttpStatus.BAD_REQUEST.value(),"Failed to delete comment.");
+        }
+```
+
+🟢 해결 방법
+- post.getUser().equals(user) 해당했을 때만 아니라 post로 얻은 comments에도 포함되어 있는지를( comments.contains(comment) )추가한다. 
+```java
+public ResponseDTO deleteResult(Integer postId, Integer commentId, CustomUserDetails customUserDetails) {
+        Integer userId =customUserDetails.getUserId();
+        User user = userJpa.findById(userId)
+                .orElseThrow(()->new com.example.github.service.exceptions.NotFoundException("User Id : "+userId+"에 해당하는 user가 존재하지 않습니다."));
+        Post post =postJpa.findById(postId)
+                .orElseThrow(()->new com.example.github.service.exceptions.NotFoundException("Post Id : "+postId+"에 해당하는 게시판이 존재하지 않습니다."));
+        List<Comment> comments = commentJpa.findAllByPost(post);
+        if (comments.isEmpty()){
+            throw new NotFoundException("해당 게시판에 삭제할 댓글이 없습니다.");
+        }
+        List<Comment> commentsByUser = commentJpa.findAllByUser(user);
+        Comment comment = commentJpa.findById(commentId)
+                .orElseThrow(()->new NotFoundException("Comment Id : "+commentId+"에 해당하는 comment가 존재하지 않습니다."));
+
+        if (!comments.contains(comment)){
+            throw new NotFoundException("해당 게시판 : "+ postId +"에 댓글이 아닙니다.");
+        }
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter dtf =DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH시 mm분");
+        String createAt =now.format(dtf);
+        try {
+            if (post.getUser().equals(user) && comments.contains(comment)) {//post로 얻은 comments에도 포함되어 있는지 조건 추가 
+                commentJpa.deleteById(commentId);
+                return new ResponseDTO(HttpStatus.OK.value(),"Deletion of comment successful. "+ createAt);
+            } else if (commentsByUser.contains(comment) && comments.contains(comment)) {
+                commentJpa.deleteById(commentId);
+                return new ResponseDTO(HttpStatus.OK.value(),"Deletion of comment successful. "+ createAt);
+            } else return new ResponseDTO(HttpStatus.BAD_REQUEST.value(),"Failed to delete comment.");
+        }catch (Exception e){
+            e.printStackTrace();
+            return  new ResponseDTO(HttpStatus.BAD_REQUEST.value(),"Failed to delete comment.");
+        }
+```
+
+####  🔴 delete comment를 위해 여러개의 commentId를 받았을 때, 내가 쓴 댓글만 지우고 나머지는 그대로 두기
+🟡 기존 코드
+```java
+public ResponseDTO deleteResults(Integer postId,List<Integer> commentIds, CustomUserDetails customUserDetails) {
+        Integer userId =customUserDetails.getUserId();
+        User user = userJpa.findById(userId)
+                .orElseThrow(()-> new com.example.github.service.exceptions.NotFoundException("User Id : "+userId+"에 해당하는 user가 존재하지 않습니다."));
+        Post post =postJpa.findById(postId)
+                .orElseThrow(()->new com.example.github.service.exceptions.NotFoundException("Post Id : "+postId+"에 해당하는 게시판이 존재하지 않습니다."));
+        List<Comment> commentsByPost = commentJpa.findAllByPost(post);
+        if (commentsByPost.isEmpty()){
+            throw new NotFoundException("해당 게시글에 댓글을 남기시지 않았습니다.");
+        }
+            List<Integer> postCommentId = commentsByPost.stream().map(Comment::getCommentId).toList();
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter dtf =DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH시 mm분");
+        String createAt =now.format(dtf);
+            if (post.getUser().equals(user)){
+                commentIds.retainAll(postCommentId);
+                if (commentIds.isEmpty()){
+                    throw new com.example.github.service.exceptions.NotFoundException("해당 게시판의 댓글이 아니거나 본인 댓글이 아니어서 삭제할 댓글이 없습니다.");
+                }
+                commentJpa.deleteAllById(commentIds);
+                    return new ResponseDTO(HttpStatus.OK.value(),"Comments ("+ commentIds+") have been deleted."+ createAt);
+
+            }else {
+                List<Comment> comments = commentJpa.findAllByUser(user);
+                List<Integer> commentIdList = comments.stream().map(Comment::getCommentId).collect(Collectors.toList());
+                if (commentIds.isEmpty()){
+                    throw new com.example.github.service.exceptions.NotFoundException("해당 게시판의 댓글이 아니거나 본인 댓글이 아니어서 삭제할 댓글이 없습니다.");
+                }
+                commentJpa.deleteAllById(commentIds);
+                return new ResponseDTO(HttpStatus.OK.value(),"Comments ("+ commentIds+") have been deleted. "+ createAt);
+            }
+    }
+```
+
+🟢 해결 방법
+- retainAll을 사용하여 내가 요청한 commentIds에서  내가 쓴 댓글 리스트(commentIdList)와 중복되는 comment-id만 commentids에 남겨둔다.(조회한 리스트에 내가 쓴 댓글이 아닌 게 포함되어 있어도 내가 쓴 댓글 리스트와 비교하여 내가 쓴 댓글만 남겨둘 수 있음)
+- 중복된 값만 남은 commentids에서 retainAll을 한 번 더 이용해 해당 Post에 있는 postCommentId와 중복된 값만 commentids에 남겨둔다(내가 쓴 댓글만 남은 commentids에서 retainAll을 사용해 postCommentid와 동일한 것만 남아 해당 post에 내가 쓴 댓글만 삭제할 수 있도록 만들었다)
+```java
+public ResponseDTO deleteResults(Integer postId,List<Integer> commentIds, CustomUserDetails customUserDetails) {
+        Integer userId =customUserDetails.getUserId();
+        User user = userJpa.findById(userId)
+                .orElseThrow(()-> new com.example.github.service.exceptions.NotFoundException("User Id : "+userId+"에 해당하는 user가 존재하지 않습니다."));
+        Post post =postJpa.findById(postId)
+                .orElseThrow(()->new com.example.github.service.exceptions.NotFoundException("Post Id : "+postId+"에 해당하는 게시판이 존재하지 않습니다."));
+        List<Comment> commentsByPost = commentJpa.findAllByPost(post);
+        if (commentsByPost.isEmpty()){
+            throw new NotFoundException("해당 게시글에 댓글을 남기시지 않았습니다.");
+        }
+            List<Integer> postCommentId = commentsByPost.stream().map(Comment::getCommentId).toList();
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter dtf =DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH시 mm분");
+        String createAt =now.format(dtf);
+            if (post.getUser().equals(user)){
+                commentIds.retainAll(postCommentId);
+                if (commentIds.isEmpty()){
+                    throw new com.example.github.service.exceptions.NotFoundException("해당 게시판의 댓글이 아니거나 본인 댓글이 아니어서 삭제할 댓글이 없습니다.");
+                }
+                commentJpa.deleteAllById(commentIds);
+                    return new ResponseDTO(HttpStatus.OK.value(),"Comments ("+ commentIds+") have been deleted."+ createAt);
+
+            }else {
+                List<Comment> comments = commentJpa.findAllByUser(user);
+                List<Integer> commentIdList = comments.stream().map(Comment::getCommentId).collect(Collectors.toList());
+                commentIds.retainAll(commentIdList);  //retainAll을 사용하여 내가 요청한 commentIds에서  내가 쓴 댓글 리스트(commentIdList)와 중복되는 comment-id만 commentids에 남겨둔다.(
+                commentIds.retainAll(postCommentId);  //중복된 값만 남은 commentids에서 retainAll을 한 번 더 이용해 해당 Post에 있는 postCommentId와 중복된 값만 commentids에 남겨둔다
+                if (commentIds.isEmpty()){
+                    throw new com.example.github.service.exceptions.NotFoundException("해당 게시판의 댓글이 아니거나 본인 댓글이 아니어서 삭제할 댓글이 없습니다.");
+                }
+                commentJpa.deleteAllById(commentIds);
+                return new ResponseDTO(HttpStatus.OK.value(),"Comments ("+ commentIds+") have been deleted. "+ createAt);
+            }
     }
 ```
 
