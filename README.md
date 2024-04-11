@@ -79,7 +79,7 @@ DB로는 MariaDB를 사용하였습니다. localDB에서 작동합니다.
 
 #### Create Comment
 
-```http
+```
   POST /comment/create?post-id
 ```
 
@@ -90,7 +90,7 @@ DB로는 MariaDB를 사용하였습니다. localDB에서 작동합니다.
 
 #### Get All Comment
 
-```http
+```
   GET /comment/get/{postId}
 
 ```
@@ -101,7 +101,7 @@ DB로는 MariaDB를 사용하였습니다. localDB에서 작동합니다.
 
 #### Get Comment by keyword
 
-```http
+```
   GET /comment/get/{keyword}
 ```
 
@@ -111,7 +111,7 @@ DB로는 MariaDB를 사용하였습니다. localDB에서 작동합니다.
 
 #### Get Comment by User
 
-```http
+```
   GET /comment/get/mycomment
 ```
 
@@ -122,7 +122,7 @@ DB로는 MariaDB를 사용하였습니다. localDB에서 작동합니다.
 
 #### Delete  Comments
 
-```http
+```
   DELETE /comment/deletes
 ```
 | Parameter | Type     | Description                       |
@@ -133,7 +133,7 @@ DB로는 MariaDB를 사용하였습니다. localDB에서 작동합니다.
 
 #### Delete  Comment
 
-```http
+```
   DELETE /comment/delete
 ```
 | Parameter | Type     | Description                       |
@@ -144,7 +144,7 @@ DB로는 MariaDB를 사용하였습니다. localDB에서 작동합니다.
 
 #### Update  Comment
 
-```http
+```
   PUT /comment/update{commentId}
 ```
 | Parameter | Type     | Description                       |
@@ -159,20 +159,26 @@ DB로는 MariaDB를 사용하였습니다. localDB에서 작동합니다.
 #### Create Comment
 ![댓글 생성](https://github.com/supercoding-be-01-April2024/project_post-board_April2024/assets/156086602/69b6e9e4-1548-41bd-b0cd-4afceb0a770c)
 
+
 #### Get All Comment
 ![post에 해당하는 댓글 조회](https://github.com/supercoding-be-01-April2024/project_post-board_April2024/assets/156086602/7f4195f0-cf4c-49f3-81c0-c213d50ba7b2)
+
 
 #### Get Comment by keyword
 ![키워드로 댓글 조회](https://github.com/supercoding-be-01-April2024/project_post-board_April2024/assets/156086602/59933a0a-df5b-4649-aa92-6ad1c3f33d7e)
 
+
 #### Get Comment by User
 ![내가 쓴 댓글만 조회](https://github.com/supercoding-be-01-April2024/project_post-board_April2024/assets/156086602/864de5fb-b90b-4f72-be1c-ddc2d3cf8dac)
+
 
 #### Delete  Comments
 ![댓글 리스트로 삭제](https://github.com/supercoding-be-01-April2024/project_post-board_April2024/assets/156086602/238cbed9-6c19-4222-9a84-92912ed7e7e3)
 
+
 #### Delete  Comment
 ![댓글 1개씩 삭제](https://github.com/supercoding-be-01-April2024/project_post-board_April2024/assets/156086602/7acac772-0a61-4cdf-a943-48fc3776462a)
+
 
 #### Update  Comment
 ![댓글 수정](https://github.com/supercoding-be-01-April2024/project_post-board_April2024/assets/156086602/b3669a5e-b2d4-4924-a7d1-9b021be7f470)
