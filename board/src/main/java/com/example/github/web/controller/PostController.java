@@ -29,21 +29,17 @@ public class PostController {
     //이메일로 게시글 조회
     //💡 ResponseDTO data
     @GetMapping("/find/{email}")
-    public ResponseDTO getPostByEmail(@PathVariable String email) {
-        Integer isSuccess = postService.getPostByEmail(email);
-
-        if(isSuccess > 0) return new ResponseDTO(HttpStatus.OK.value(), String.valueOf("post find successful"));
-        else return new ResponseDTO(400, "searching post by email fail");
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseDTO getPostByEmail(@PathVariable String email,@AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        return postService.getPostByEmail(email, customUserDetails.getEmail());
     }
 
     //게시글 전체 조회
     //💡 ResponseDTO data
     @GetMapping("/findAll")
+    @ResponseStatus(HttpStatus.OK)
     public ResponseDTO getAllPosts() {
-        Integer isSuccess = postService.getAllPosts();
-
-        if(isSuccess > 0) return new ResponseDTO(HttpStatus.OK.value(), String.valueOf("Everypost find successful"));
-        else return new ResponseDTO(400, "searching every post fail");
+        return postService.getAllPosts();
     }
 
     //게시글 수정
@@ -69,7 +65,6 @@ public class PostController {
         }
     }
 
-
     //게시글 좋아요 누르기
     @GetMapping("/likes/{postId}")
     public ResponseDTO likesPost(@AuthenticationPrincipal CustomUserDetails customUserDetails,
@@ -87,7 +82,4 @@ public class PostController {
     public ResponseDTO findPostById(@PathVariable Integer postId){
         return postService.findPostById(postId);
     }
-
-
-
 }

@@ -46,12 +46,48 @@ public class PostService {
         return true;
     }
 
-    public Integer getPostByEmail(String email) {
-        return Long.valueOf(postJpa.findByEmailFetchJoin(email).stream().count()).intValue();
+    public ResponseDTO getPostByEmail(String email, String myEmail) {
+//        if(email != myEmail) {
+//            return new ResponseDTO(400, "내가 쓴 게시글로만 조회 해주시기 바랍니다.");
+//        }
+
+        List<Post> postsByEmail = postJpa.findByEmailFetchJoin(email);
+
+        if(postsByEmail.stream().toList().isEmpty()) {
+            return new ResponseDTO(400, "게시글 조회 실패");
+        } else {
+            List<PostsResponse> postsResponses= postsByEmail
+                    .stream()
+                    .map(p-> new PostsResponse(
+                            p.getPostId(),
+                            p.getTitle(),
+                            p.getName(),
+                            p.getLikeCnt(),
+                            p.getCreatedAt()))
+                    .collect(Collectors.toList());
+
+            return new ResponseDTO(HttpStatus.OK.value(), "게시글 조회 성공", postsResponses);
+        }
     }
 
-    public Integer getAllPosts() {
-        return postJpa.findAll().size();
+    public ResponseDTO getAllPosts() {
+        List<Post> postsByAll = postJpa.findAll();
+
+        if(postsByAll.stream().toList().isEmpty()) {
+            return new ResponseDTO(400, "게시글 조회 실패");
+        } else {
+            List<PostsResponse> postsResponses= postsByAll
+                    .stream()
+                    .map(p-> new PostsResponse(
+                            p.getPostId(),
+                            p.getTitle(),
+                            p.getName(),
+                            p.getLikeCnt(),
+                            p.getCreatedAt()))
+                    .collect(Collectors.toList());
+
+            return new ResponseDTO(HttpStatus.OK.value(), "게시글 조회 성공", postsResponses);
+        }
     }
 
     public void modifyPost(PostRequest postRequest, Integer userId, Integer postId) {
@@ -69,8 +105,6 @@ public class PostService {
             throw new NotFoundException("Failed to modify post.");
         }
     }
-
-
 
     public void deletePost(Integer userId) {
         Integer postCnt = Long.valueOf(postJpa.findByUserId(userId).stream().count()).intValue();
@@ -100,7 +134,6 @@ public class PostService {
 
         return new ResponseDTO(HttpStatus.OK.value(),"Like successfully added. Post number "+ postId + " has " +post.getLikeCnt() + " likes", postsResponse);
     }
-
 
     public ResponseDTO findPostById(Integer postId) {
         Post post= postJpa.findById(postId)

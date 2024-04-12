@@ -1,5 +1,7 @@
 package com.example.github.web.DTO.post;
 
+import com.example.github.repository.comment.Comment;
+import com.example.github.repository.post.Post;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -27,5 +29,13 @@ public class PostsResponse {
         this.name = name;
         this.likesCount = likesCount != null ? likesCount.intValue() : 0;
         this.createdAt = createdAt;
+    }
+
+    public PostsResponse(Post post) {
+        this.postId = post.getPostId();
+        this.title = post.getTitle();
+        this.name = post.getName();
+        this.likesCount = post.getLikeCnt() != null ? post.getLikeCnt() : 0;
+        this.createdAt = post.getCreatedAt();
     }
 }
