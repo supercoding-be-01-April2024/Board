@@ -16,7 +16,7 @@ public interface PostJpa extends JpaRepository<Post, Integer> {
                     "JOIN FETCH p.user u " +
                     "WHERE u.email = ?1 "
     )
-    List findByEmailFetchJoin(String email);
+    List<Post> findByEmailFetchJoin(String email);
 
     @Query(
             "SELECT p " +
