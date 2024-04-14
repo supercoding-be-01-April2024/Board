@@ -262,16 +262,22 @@ DB로는 MariaDB를 사용하였습니다. localDB에서 작동합니다.
 
 #### Create post
 ![게시글생성](https://github.com/supercoding-be-01-April2024/project_post-board_April2024/assets/155543391/9bc318a8-7acd-4848-ac29-96856f426cba)
+
 #### Find post by email
 ![이메일로 게시글 조회](https://github.com/supercoding-be-01-April2024/project_post-board_April2024/assets/155543391/67b14121-7ac3-49a5-b473-4da9be751686)
+
 #### Find everyposts
 ![전체게시글 조회](https://github.com/supercoding-be-01-April2024/project_post-board_April2024/assets/155543391/f88777c3-007a-4bd2-a290-e1123b91b3dc)
+
 #### Delete post
 ![게시글 삭제](https://github.com/supercoding-be-01-April2024/project_post-board_April2024/assets/155543391/1a52b8dc-547f-49fa-b2e6-0d72c6e3ca35)
+
 #### Modify post
 ![게시글 수정](https://github.com/supercoding-be-01-April2024/project_post-board_April2024/assets/155543391/2fb5f095-8a17-4a91-8f69-66666c6271c5)
+
 #### likes post
 ![게시글 좋아요](https://github.com/supercoding-be-01-April2024/project_post-board_April2024/assets/155543391/b7556ff6-555a-4e71-8d7c-e8185132b630)
+
 #### Find post details
 ![게시글 상세조회](https://github.com/supercoding-be-01-April2024/project_post-board_April2024/assets/155543391/9f820957-1338-43aa-9041-3a3f718cb96a)
 
