@@ -60,22 +60,7 @@ DB로는 MariaDB를 사용하였습니다. localDB에서 작동합니다.
 | `CustomUserDetails` | `token` | **Required**. Your JWT token |
 
 
-## 실행결과 스크린샷
-
-### USER API
-
-#### Signup
-<img width="555" alt="Screenshot 2024-04-05 at 17 38 21" src="https://github.com/soheeparklee/sc_project01_April2024_verSoh/assets/97790983/adaab762-8d0b-465c-89c4-742ab44b72e4">
-
-#### Login
-<img width="540" alt="Screenshot 2024-04-05 at 17 38 57" src="https://github.com/soheeparklee/sc_project01_April2024_verSoh/assets/97790983/6b31c9ae-779f-4329-8815-166f82628fd1">
-
-#### Logout
-<img width="553" alt="Screenshot 2024-04-05 at 17 39 23" src="https://github.com/soheeparklee/sc_project01_April2024_verSoh/assets/97790983/63b4d5f5-2327-4a6f-aea7-74aea0e9a6c6">
-
-## API 명세서
-
-#### Comment API
+### Comment API
 
 #### Create Comment
 
@@ -152,7 +137,20 @@ DB로는 MariaDB를 사용하였습니다. localDB에서 작동합니다.
 | `comment-id`      | `@RequestParam Integer` | **Required**. comment-ids |
 | `CustomUserDetails`      | `@AuthenticationPrincipal` | **Required**. Token |
 
+
+
 ## 실행결과 스크린샷
+
+### USER API
+
+#### Signup
+<img width="555" alt="Screenshot 2024-04-05 at 17 38 21" src="https://github.com/soheeparklee/sc_project01_April2024_verSoh/assets/97790983/adaab762-8d0b-465c-89c4-742ab44b72e4">
+
+#### Login
+<img width="540" alt="Screenshot 2024-04-05 at 17 38 57" src="https://github.com/soheeparklee/sc_project01_April2024_verSoh/assets/97790983/6b31c9ae-779f-4329-8815-166f82628fd1">
+
+#### Logout
+<img width="553" alt="Screenshot 2024-04-05 at 17 39 23" src="https://github.com/soheeparklee/sc_project01_April2024_verSoh/assets/97790983/63b4d5f5-2327-4a6f-aea7-74aea0e9a6c6">
 
 ### Comment API
 
