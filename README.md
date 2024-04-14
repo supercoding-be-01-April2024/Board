@@ -137,6 +137,83 @@ DB로는 MariaDB를 사용하였습니다. localDB에서 작동합니다.
 | `comment-id`      | `@RequestParam Integer` | **Required**. comment-ids |
 | `CustomUserDetails`      | `@AuthenticationPrincipal` | **Required**. Token |
 
+### API 명세서
+
+#### Post API
+
+#### Create post
+
+```
+  POST /posts/create
+```
+
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `title` | `string` | **Required**. title |
+| `content` | `string` | **Required**. content |
+| `CustomUserDetails`      | `@AuthenticationPrincipal` | **Required**. Token 
+
+#### Find post by email
+
+```
+  GET /posts/find/{email}
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `email`      | `string` | **Required**. email |
+| `CustomUserDetails`      | `@AuthenticationPrincipal` | **Required**. Token 
+
+#### Find everyposts
+
+```
+  GET /posts/findAll
+```
+
+
+#### Modify post
+
+```
+  POST /posts/modify/{post_id}
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `title`      | `string` | **Required**. title |
+| `content`      | `string` | **Required**. content |
+| `CustomUserDetails`      | `@AuthenticationPrincipal` | **Required**. Token 
+
+#### Delete post
+
+```
+  DEL /posts/delete
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `CustomUserDetails`      | `@AuthenticationPrincipal` | **Required**. Token |
+
+#### Likes post
+
+```
+  GET /post/likes/{post_id}
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `post`      | `@RequestParam Integer` | **Required**. post_id |
+| `CustomUserDetails`      | `@AuthenticationPrincipal` | **Required**. Token |
+
+#### Find post details
+
+```
+  GET /post/find/id/{post_id}
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `post`      | `@RequestParam Integer` | **Required**. post_id |
+
 
 
 ## 실행결과 스크린샷
@@ -181,100 +258,21 @@ DB로는 MariaDB를 사용하였습니다. localDB에서 작동합니다.
 #### Update  Comment
 ![댓글 수정](https://github.com/supercoding-be-01-April2024/project_post-board_April2024/assets/156086602/b3669a5e-b2d4-4924-a7d1-9b021be7f470)
 
-## API 명세서
+### POST API
 
-#### Post API
-
-##### Create post
-
-```http
-  POST /posts/create
-```
-
-| Parameter | Type     | Description                |
-| :-------- | :------- | :------------------------- |
-| `title` | `string` | **Required**. title |
-| `content` | `string` | **Required**. content |
-| `CustomUserDetails`      | `@AuthenticationPrincipal` | **Required**. Token 
-
-##### Find post by email
-
-```http
-  GET /posts/find/{email}
-```
-
-| Parameter | Type     | Description                       |
-| :-------- | :------- | :-------------------------------- |
-| `email`      | `string` | **Required**. email |
-| `CustomUserDetails`      | `@AuthenticationPrincipal` | **Required**. Token 
-
-##### Find everyposts
-
-```http
-  GET /posts/findAll
-```
-
-
-##### Modify post
-
-```http
-  POST /posts/modify/{post_id}
-```
-
-| Parameter | Type     | Description                       |
-| :-------- | :------- | :-------------------------------- |
-| `title`      | `string` | **Required**. title |
-| `content`      | `string` | **Required**. content |
-| `CustomUserDetails`      | `@AuthenticationPrincipal` | **Required**. Token 
-
-##### Delete post
-
-```http
-  DEL /posts/delete
-```
-
-| Parameter | Type     | Description                       |
-| :-------- | :------- | :-------------------------------- |
-| `CustomUserDetails`      | `@AuthenticationPrincipal` | **Required**. Token |
-
-##### Likes post
-
-```http
-  GET /post/likes/{post_id}
-```
-
-| Parameter | Type     | Description                       |
-| :-------- | :------- | :-------------------------------- |
-| `post`      | `@RequestParam Integer` | **Required**. post_id |
-| `CustomUserDetails`      | `@AuthenticationPrincipal` | **Required**. Token |
-
-##### Find post details
-
-```http
-  GET /post/find/id/{post_id}
-```
-
-| Parameter | Type     | Description                       |
-| :-------- | :------- | :-------------------------------- |
-| `post`      | `@RequestParam Integer` | **Required**. post_id |
-
-## 실행결과 스크린샷
-
-#### POST API
-
-##### Create post
+#### Create post
 ![게시글생성](https://github.com/supercoding-be-01-April2024/project_post-board_April2024/assets/155543391/9bc318a8-7acd-4848-ac29-96856f426cba)
-##### Find post by email
+#### Find post by email
 ![이메일로 게시글 조회](https://github.com/supercoding-be-01-April2024/project_post-board_April2024/assets/155543391/67b14121-7ac3-49a5-b473-4da9be751686)
-##### Find everyposts
+#### Find everyposts
 ![전체게시글 조회](https://github.com/supercoding-be-01-April2024/project_post-board_April2024/assets/155543391/f88777c3-007a-4bd2-a290-e1123b91b3dc)
-##### Delete post
+#### Delete post
 ![게시글 삭제](https://github.com/supercoding-be-01-April2024/project_post-board_April2024/assets/155543391/1a52b8dc-547f-49fa-b2e6-0d72c6e3ca35)
-##### Modify post
+#### Modify post
 ![게시글 수정](https://github.com/supercoding-be-01-April2024/project_post-board_April2024/assets/155543391/2fb5f095-8a17-4a91-8f69-66666c6271c5)
-##### likes post
+#### likes post
 ![게시글 좋아요](https://github.com/supercoding-be-01-April2024/project_post-board_April2024/assets/155543391/b7556ff6-555a-4e71-8d7c-e8185132b630)
-##### Find post details
+#### Find post details
 ![게시글 상세조회](https://github.com/supercoding-be-01-April2024/project_post-board_April2024/assets/155543391/9f820957-1338-43aa-9041-3a3f718cb96a)
 
 ## 코드 리뷰 및 피드백
